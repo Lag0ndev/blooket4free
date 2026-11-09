@@ -164,27 +164,34 @@
       const img = document.getElementById('mainImg');
       const body = document.body;
 
-      // Proper furry / anthro characters (people with animal ears, tails, etc.)
+      // Bigger mix: real anthro furries (people with ears/tails) + weirder chaotic stuff
       const chaosImages = [
-        // original person
+        // original
         "https://cdn.phototourl.com/member/2026-11-09-3eeac61c-c554-48f8-872d-8e6f84fb79c9.png",
 
-        // anthro / furry style characters
+        // anthro / furry characters (people with animal features)
         "https://jinxxy-c.jinxxy-cdn.com/cdn-cgi/image/format=auto,onerror=redirect/5c2e8945-f61a-5377-87fa-750bcec247ee/3466294563277112810/759733571582708736.png",
         "https://art.ngfiles.com/thumbnails/2251000/2251437_full.webp?f1640175384",
         "https://upload.wikimedia.org/wikipedia/commons/7/79/Anteater_Anthro.jpg",
         "https://i.imgur.com/vFg92Bk.jpeg",
 
-        // more anthro characters from public sources
+        // more anthro style
         "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/133.png",
         "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/196.png",
         "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/197.png",
         "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/700.png",
+        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/471.png",
+        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/470.png",
+        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/136.png",
+        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/135.png",
+        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/134.png",
 
-        // extra variety so it feels chaotic
+        // extra chaos / weird ones
+        "https://i.imgur.com/8Km9tLL.png",
         "https://cdn.phototourl.com/member/2026-11-09-3eeac61c-c554-48f8-872d-8e6f84fb79c9.png",
         "https://jinxxy-c.jinxxy-cdn.com/cdn-cgi/image/format=auto,onerror=redirect/5c2e8945-f61a-5377-87fa-750bcec247ee/3466294563277112810/759733571582708736.png",
-        "https://art.ngfiles.com/thumbnails/2251000/2251437_full.webp?f1640175384"
+        "https://art.ngfiles.com/thumbnails/2251000/2251437_full.webp?f1640175384",
+        "https://upload.wikimedia.org/wikipedia/commons/7/79/Anteater_Anthro.jpg"
       ];
 
       function random(min, max) {
@@ -202,34 +209,34 @@
         el.src = pick(chaosImages);
         el.className = 'chaos-img';
 
-        const size = random(60, 180);
+        const size = random(55, 190);
         el.style.width = size + 'px';
 
         if (typeof x === 'number' && x > 50) {
-          el.style.left = (x + random(-50, 50)) + 'px';
-          el.style.top  = (y + random(-50, 50)) + 'px';
+          el.style.left = (x + random(-60, 60)) + 'px';
+          el.style.top  = (y + random(-60, 60)) + 'px';
         } else {
-          el.style.left = random(5, 90) + 'vw';
-          el.style.top  = random(5, 90) + 'vh';
+          el.style.left = random(3, 92) + 'vw';
+          el.style.top  = random(3, 92) + 'vh';
         }
 
         const anim = pick(animTypes);
-        const duration = random(1.4, 3.2);
+        const duration = random(1.3, 3.4);
 
         const angle = random(0, Math.PI * 2);
-        const dist = random(240, 550);
+        const dist = random(260, 600);
         el.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
         el.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
-        el.style.setProperty('--rot', random(-500, 500) + 'deg');
+        el.style.setProperty('--rot', random(-560, 560) + 'deg');
 
-        el.style.setProperty('--tx1', random(-240, 240) + 'px');
-        el.style.setProperty('--ty1', random(-240, 240) + 'px');
-        el.style.setProperty('--tx2', random(-300, 300) + 'px');
-        el.style.setProperty('--ty2', random(-300, 300) + 'px');
-        el.style.setProperty('--tx3', random(-220, 220) + 'px');
-        el.style.setProperty('--ty3', random(-220, 220) + 'px');
-        el.style.setProperty('--tx4', random(-350, 350) + 'px');
-        el.style.setProperty('--ty4', random(-350, 350) + 'px');
+        el.style.setProperty('--tx1', random(-260, 260) + 'px');
+        el.style.setProperty('--ty1', random(-260, 260) + 'px');
+        el.style.setProperty('--tx2', random(-320, 320) + 'px');
+        el.style.setProperty('--ty2', random(-320, 320) + 'px');
+        el.style.setProperty('--tx3', random(-240, 240) + 'px');
+        el.style.setProperty('--ty3', random(-240, 240) + 'px');
+        el.style.setProperty('--tx4', random(-380, 380) + 'px');
+        el.style.setProperty('--ty4', random(-380, 380) + 'px');
 
         el.style.animation = `${anim} ${duration}s ease-out forwards`;
 
@@ -241,7 +248,7 @@
         const flash = document.createElement('div');
         flash.className = 'flash';
         const hue = random(0, 360);
-        flash.style.background = `radial-gradient(circle at center, hsla(${hue}, 90%, 60%, 0.45), transparent 65%)`;
+        flash.style.background = `radial-gradient(circle at center, hsla(${hue}, 90%, 60%, 0.5), transparent 65%)`;
         body.appendChild(flash);
         setTimeout(() => flash.remove(), 600);
       }
@@ -273,40 +280,43 @@
 
         createRipple(cx, cy);
 
-        const burstCount = 8 + Math.min(clickCount * 2, 22);
+        // bigger burst
+        const burstCount = 10 + Math.min(clickCount * 3, 28);
         for (let i = 0; i < burstCount; i++) {
           setTimeout(() => {
             spawnChaosImage(cx, cy);
-          }, i * 28);
+          }, i * 25);
         }
 
-        const extra = Math.min(clickCount + 3, 14);
+        // extra random ones
+        const extra = Math.min(clickCount + 4, 18);
         for (let i = 0; i < extra; i++) {
           setTimeout(() => {
             spawnChaosImage();
-          }, 100 + i * 40);
+          }, 80 + i * 35);
         }
 
         screenFlash();
         shakeScreen();
 
-        img.style.transform = `scale(${random(0.7, 1.35)}) rotate(${random(-35, 35)}deg)`;
+        img.style.transform = `scale(${random(0.65, 1.4)}) rotate(${random(-40, 40)}deg)`;
         setTimeout(() => {
           img.style.transform = '';
-        }, 160);
+        }, 150);
 
-        if (clickCount > 3) {
-          for (let i = 0; i < 12; i++) {
+        if (clickCount > 2) {
+          for (let i = 0; i < 14; i++) {
             setTimeout(() => {
               spawnChaosImage();
-              if (i % 3 === 0) screenFlash();
-            }, 220 + i * 60);
+              if (i % 2 === 0) screenFlash();
+            }, 180 + i * 50);
           }
         }
 
-        if (clickCount > 7) {
-          for (let i = 0; i < 28; i++) {
-            setTimeout(() => spawnChaosImage(), i * 30);
+        if (clickCount > 6) {
+          // full chaos mode
+          for (let i = 0; i < 35; i++) {
+            setTimeout(() => spawnChaosImage(), i * 25);
           }
           shakeScreen();
         }
