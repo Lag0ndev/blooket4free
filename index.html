@@ -7,10 +7,13 @@
         margin: 0;
         height: 100vh;
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
         background: #111;
         overflow: hidden;
+        font-family: system-ui, -apple-system, sans-serif;
+        position: relative;
       }
 
       .spinner {
@@ -18,19 +21,298 @@
         font-weight: bold;
         color: #5C6AC4;
         animation: spin 3s linear infinite;
+        margin-bottom: 30px;
+        z-index: 10;
+        user-select: none;
       }
 
       @keyframes spin {
-        from {
-          transform: rotate(0deg);
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+
+      .main-img {
+        width: 220px;
+        height: auto;
+        border-radius: 16px;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        z-index: 10;
+        box-shadow: 0 0 20px rgba(92, 106, 196, 0.4);
+        border: 3px solid #5C6AC4;
+      }
+
+      .main-img:hover {
+        transform: scale(1.08) rotate(-3deg);
+        box-shadow: 0 0 30px rgba(92, 106, 196, 0.7);
+      }
+
+      .main-img:active {
+        transform: scale(0.95);
+      }
+
+      /* Floating images that spawn on click */
+      .flying-img {
+        position: fixed;
+        width: 80px;
+        height: auto;
+        border-radius: 12px;
+        pointer-events: none;
+        z-index: 100;
+        animation: flyAround 2.5s ease-in-out forwards;
+        box-shadow: 0 0 15px rgba(255, 100, 200, 0.6);
+      }
+
+      @keyframes flyAround {
+        0% {
+          opacity: 1;
+          transform: scale(0.3) rotate(0deg);
         }
-        to {
-          transform: rotate(360deg);
+        20% {
+          opacity: 1;
+          transform: scale(1.2) rotate(180deg);
         }
+        100% {
+          opacity: 0;
+          transform: scale(0.5) rotate(720deg) translateY(-200px);
+        }
+      }
+
+      /* Weird floating text */
+      .weird-text {
+        position: fixed;
+        font-size: 28px;
+        font-weight: 900;
+        color: #ff00aa;
+        text-shadow: 0 0 10px #00ffff, 0 0 20px #ff00aa;
+        pointer-events: none;
+        z-index: 200;
+        animation: textChaos 2s ease-out forwards;
+        white-space: nowrap;
+      }
+
+      @keyframes textChaos {
+        0% {
+          opacity: 1;
+          transform: scale(0.5) rotate(-20deg);
+        }
+        30% {
+          opacity: 1;
+          transform: scale(1.4) rotate(15deg);
+        }
+        100% {
+          opacity: 0;
+          transform: scale(0.8) rotate(40deg) translateY(-150px);
+        }
+      }
+
+      /* Screen shake */
+      .shake {
+        animation: shake 0.5s ease-in-out;
+      }
+
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        20% { transform: translateX(-12px) rotate(-2deg); }
+        40% { transform: translateX(12px) rotate(2deg); }
+        60% { transform: translateX(-8px) rotate(-1deg); }
+        80% { transform: translateX(8px) rotate(1deg); }
+      }
+
+      /* Rainbow flash overlay */
+      .flash {
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(circle, rgba(255,0,255,0.3), transparent 70%);
+        pointer-events: none;
+        z-index: 50;
+        animation: flashOut 0.6s ease-out forwards;
+      }
+
+      @keyframes flashOut {
+        from { opacity: 1; }
+        to { opacity: 0; }
+      }
+
+      /* Spinning text variant */
+      .spin-text {
+        position: fixed;
+        font-size: 22px;
+        font-weight: bold;
+        color: #00ffcc;
+        text-shadow: 2px 2px 0 #ff00aa;
+        pointer-events: none;
+        z-index: 150;
+        animation: spinText 3s linear forwards;
+      }
+
+      @keyframes spinText {
+        0% { opacity: 1; transform: rotate(0deg) scale(1); }
+        100% { opacity: 0; transform: rotate(1080deg) scale(2); }
+      }
+
+      .hint {
+        margin-top: 18px;
+        color: #666;
+        font-size: 14px;
+        z-index: 10;
       }
     </style>
   </head>
   <body>
     <div class="spinner">fastyjay</div>
+    <img 
+      src="https://cdn.phototourl.com/member/2026-11-09-3eeac61c-c554-48f8-872d-8e6f84fb79c9.png" 
+      alt="click me" 
+      class="main-img" 
+      id="mainImg"
+    >
+    <div class="hint">click the image...</div>
+
+    <script>
+      const img = document.getElementById('mainImg');
+      const body = document.body;
+
+      const funnyTexts = [
+        "WOAHHHHH",
+        "OH NO",
+        "WHAT",
+        "LMAO",
+        "HELP",
+        "WHY",
+        "AAAAA",
+        "FASTYJAY???",
+        "BROOO",
+        "STOP",
+        "HEHEHE",
+        "CHAOS",
+        "???",
+        "YIPPEE",
+        "NOT AGAIN",
+        "SKIBIDI",
+        "SIGMA",
+        "RIZZ",
+        "OH LAWD",
+        "SEND HELP",
+        "IT'S ALIVE",
+        "UNLIMITED POWER",
+        "WHY IS HE EVERYWHERE"
+      ];
+
+      const weirdTexts = [
+        "blorp",
+        "zorp",
+        "nyeh",
+        "bruh moment",
+        "sus",
+        "among us",
+        "gyatt",
+        "fanum tax",
+        "ohio",
+        "goofy ahh",
+        "what the dog doin",
+        "erm what the sigma",
+        "ratio",
+        "L + ratio",
+        "skill issue"
+      ];
+
+      function random(min, max) {
+        return Math.random() * (max - min) + min;
+      }
+
+      function spawnFlyingImage() {
+        const clone = document.createElement('img');
+        clone.src = img.src;
+        clone.className = 'flying-img';
+        clone.style.left = random(5, 90) + 'vw';
+        clone.style.top = random(5, 85) + 'vh';
+        clone.style.width = random(50, 140) + 'px';
+        clone.style.animationDuration = random(1.5, 3.5) + 's';
+        body.appendChild(clone);
+        setTimeout(() => clone.remove(), 4000);
+      }
+
+      function spawnWeirdText() {
+        const el = document.createElement('div');
+        el.className = 'weird-text';
+        el.textContent = funnyTexts[Math.floor(Math.random() * funnyTexts.length)];
+        el.style.left = random(10, 80) + 'vw';
+        el.style.top = random(15, 75) + 'vh';
+        el.style.color = `hsl(${random(0, 360)}, 100%, 65%)`;
+        el.style.fontSize = random(20, 42) + 'px';
+        body.appendChild(el);
+        setTimeout(() => el.remove(), 2500);
+      }
+
+      function spawnSpinText() {
+        const el = document.createElement('div');
+        el.className = 'spin-text';
+        el.textContent = weirdTexts[Math.floor(Math.random() * weirdTexts.length)];
+        el.style.left = random(15, 75) + 'vw';
+        el.style.top = random(20, 70) + 'vh';
+        body.appendChild(el);
+        setTimeout(() => el.remove(), 3200);
+      }
+
+      function screenFlash() {
+        const flash = document.createElement('div');
+        flash.className = 'flash';
+        body.appendChild(flash);
+        setTimeout(() => flash.remove(), 700);
+      }
+
+      function shakeScreen() {
+        body.classList.add('shake');
+        setTimeout(() => body.classList.remove('shake'), 500);
+      }
+
+      let clickCount = 0;
+
+      img.addEventListener('click', () => {
+        clickCount++;
+
+        // Always spawn a few things
+        for (let i = 0; i < 4 + Math.min(clickCount, 8); i++) {
+          setTimeout(() => spawnFlyingImage(), i * 40);
+        }
+
+        for (let i = 0; i < 3; i++) {
+          setTimeout(() => spawnWeirdText(), i * 80);
+        }
+
+        spawnSpinText();
+        screenFlash();
+        shakeScreen();
+
+        // Extra chaos the more you click
+        if (clickCount > 3) {
+          for (let i = 0; i < 6; i++) {
+            setTimeout(() => {
+              spawnFlyingImage();
+              spawnWeirdText();
+            }, 200 + i * 100);
+          }
+        }
+
+        if (clickCount > 8) {
+          // Maximum chaos mode
+          for (let i = 0; i < 12; i++) {
+            setTimeout(() => {
+              spawnFlyingImage();
+              if (i % 2 === 0) spawnWeirdText();
+              if (i % 3 === 0) spawnSpinText();
+            }, i * 60);
+          }
+        }
+
+        // Make the main image do a little dance
+        img.style.transition = 'transform 0.15s';
+        img.style.transform = `scale(${random(0.85, 1.25)}) rotate(${random(-25, 25)}deg)`;
+        setTimeout(() => {
+          img.style.transform = '';
+        }, 180);
+      });
+    </script>
   </body>
 </html>
