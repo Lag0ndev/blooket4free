@@ -167,6 +167,29 @@
       const img = document.getElementById('mainImg');
       const body = document.body;
 
+      // Mix of the original image + furry / anthro images
+      const chaosImages = [
+        // original
+        "https://cdn.phototourl.com/member/2026-11-09-3eeac61c-c554-48f8-872d-8e6f84fb79c9.png",
+
+        // cute / furry style
+        "https://i.imgur.com/vFg92Bk.jpeg",          // fox
+        "https://i.imgur.com/8Km9tLL.png",           // classic cute
+        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/133.png", // eevee
+        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/196.png", // espeon
+        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/197.png", // umbreon
+        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/700.png", // sylveon
+        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/471.png", // glaceon
+        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/470.png", // leafeon
+        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/136.png", // flareon
+        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/135.png", // jolteon
+        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/134.png", // vaporeon
+        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png",  // pikachu
+        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/52.png",  // meowth
+        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/133.png",
+        "https://cdn.phototourl.com/member/2026-11-09-3eeac61c-c554-48f8-872d-8e6f84fb79c9.png"
+      ];
+
       function random(min, max) {
         return Math.random() * (max - min) + min;
       }
@@ -179,49 +202,45 @@
 
       function spawnChaosImage(x, y) {
         const el = document.createElement('img');
-        el.src = img.src;
+        el.src = pick(chaosImages);   // randomly pick original or furry
         el.className = 'chaos-img';
 
-        const size = random(40, 160);
+        const size = random(50, 170);
         el.style.width = size + 'px';
 
         // Start near click or random
-        const startX = x !== undefined ? x + random(-40, 40) : random(5, 90);
-        const startY = y !== undefined ? y + random(-40, 40) : random(5, 90);
-
-        el.style.left = (typeof startX === 'number' && startX < 100 ? startX + 'vw' : startX + 'px');
-        el.style.top  = (typeof startY === 'number' && startY < 100 ? startY + 'vh' : startY + 'px');
-
-        // If we got pixel coords from click, use them
-        if (typeof x === 'number' && x > 100) {
-          el.style.left = x + random(-30, 30) + 'px';
-          el.style.top  = y + random(-30, 30) + 'px';
+        if (typeof x === 'number' && x > 50) {
+          el.style.left = (x + random(-40, 40)) + 'px';
+          el.style.top  = (y + random(-40, 40)) + 'px';
+        } else {
+          el.style.left = random(5, 90) + 'vw';
+          el.style.top  = random(5, 90) + 'vh';
         }
 
         const anim = pick(animTypes);
-        const duration = random(1.2, 2.8);
+        const duration = random(1.3, 3.0);
 
         // Set CSS variables for direction-based animations
         const angle = random(0, Math.PI * 2);
-        const dist = random(200, 500);
+        const dist = random(220, 520);
         el.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
         el.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
-        el.style.setProperty('--rot', random(-400, 400) + 'deg');
+        el.style.setProperty('--rot', random(-450, 450) + 'deg');
 
         // Bounce path points
-        el.style.setProperty('--tx1', random(-200, 200) + 'px');
-        el.style.setProperty('--ty1', random(-200, 200) + 'px');
-        el.style.setProperty('--tx2', random(-250, 250) + 'px');
-        el.style.setProperty('--ty2', random(-250, 250) + 'px');
-        el.style.setProperty('--tx3', random(-180, 180) + 'px');
-        el.style.setProperty('--ty3', random(-180, 180) + 'px');
-        el.style.setProperty('--tx4', random(-300, 300) + 'px');
-        el.style.setProperty('--ty4', random(-300, 300) + 'px');
+        el.style.setProperty('--tx1', random(-220, 220) + 'px');
+        el.style.setProperty('--ty1', random(-220, 220) + 'px');
+        el.style.setProperty('--tx2', random(-280, 280) + 'px');
+        el.style.setProperty('--ty2', random(-280, 280) + 'px');
+        el.style.setProperty('--tx3', random(-200, 200) + 'px');
+        el.style.setProperty('--ty3', random(-200, 200) + 'px');
+        el.style.setProperty('--tx4', random(-320, 320) + 'px');
+        el.style.setProperty('--ty4', random(-320, 320) + 'px');
 
         el.style.animation = `${anim} ${duration}s ease-out forwards`;
 
         body.appendChild(el);
-        setTimeout(() => el.remove(), duration * 1000 + 100);
+        setTimeout(() => el.remove(), duration * 1000 + 150);
       }
 
       function screenFlash() {
@@ -258,23 +277,22 @@
         const cx = rect.left + rect.width / 2;
         const cy = rect.top + rect.height / 2;
 
-        // Ripple from the image
         createRipple(cx, cy);
 
-        // Burst of images
-        const burstCount = 6 + Math.min(clickCount * 2, 18);
+        // Burst of mixed images (original + furries)
+        const burstCount = 7 + Math.min(clickCount * 2, 20);
         for (let i = 0; i < burstCount; i++) {
           setTimeout(() => {
             spawnChaosImage(cx, cy);
-          }, i * 35);
+          }, i * 30);
         }
 
         // Extra random ones across the screen
-        const extra = Math.min(clickCount, 10);
+        const extra = Math.min(clickCount + 2, 12);
         for (let i = 0; i < extra; i++) {
           setTimeout(() => {
             spawnChaosImage();
-          }, 150 + i * 50);
+          }, 120 + i * 45);
         }
 
         screenFlash();
@@ -287,19 +305,18 @@
         }, 160);
 
         // Escalating chaos
-        if (clickCount > 4) {
-          for (let i = 0; i < 8; i++) {
+        if (clickCount > 3) {
+          for (let i = 0; i < 10; i++) {
             setTimeout(() => {
               spawnChaosImage();
               if (i % 3 === 0) screenFlash();
-            }, 300 + i * 80);
+            }, 250 + i * 70);
           }
         }
 
-        if (clickCount > 9) {
-          // Full screen takeover
-          for (let i = 0; i < 20; i++) {
-            setTimeout(() => spawnChaosImage(), i * 40);
+        if (clickCount > 8) {
+          for (let i = 0; i < 25; i++) {
+            setTimeout(() => spawnChaosImage(), i * 35);
           }
           shakeScreen();
         }
